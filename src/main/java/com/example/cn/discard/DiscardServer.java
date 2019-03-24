@@ -32,10 +32,19 @@ public class DiscardServer {
                     .childOption(ChannelOption.SO_KEEPALIVE,true);
 
             ChannelFuture f = b.bind(port).sync();
-            f.channel();
+            f.channel().closeFuture().sync();
         }finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        int port = 8080;
+        if (args.length > 0) {
+            port = Integer.parseInt(args[0]);
+        }
+
+        new DiscardServer().run();
     }
 }
